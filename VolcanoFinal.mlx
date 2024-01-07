@@ -1,0 +1,64 @@
+clc
+clear all
+
+Vi = input("\nIngrese la velocidad inicial: ");
+cd = input("\nIngrese el coeficiente de arrastre: ");
+angulo = input("\Ingrese el angulo: ");
+
+deltat = 1;
+M = 15000;
+Xo = 0;
+Yo = 1000;
+g = 9.81;
+angulor = deg2rad(angulo);
+area = 5.16;
+densidad = 1.2;
+Vo_y = Vi*sin(angulor);
+Vo_x = Vi*cos(angulor);
+b = 1/2*area*cd*densidad;
+peso = M*g;
+
+
+tf = 100;
+
+t = 0:deltat:tf;
+vfy = zeros(size(t));
+y = zeros(size(t));
+vfx = zeros(size(t));
+x = zeros(size(t));
+
+
+vfy(1) = Vo_y;
+y(1) = Yo;
+vfx(1) = Vo_x;
+x(1) = Yo;
+
+n = length(t);
+conteo = 1;
+
+for k = 2:n
+    vfy(k) = ((((-peso)-(b.*vfy(k-1)^2)).*deltat)/M)+vfy(k-1);
+    y(k) = (vfy(k).*deltat)+ y(k-1);
+    vfx(k) = ((((-(b.*vfx(k-1)^2)).*deltat)/M)+vfx(k-1));
+    x(k) = (vfx(k).*deltat)+ x(k-1);
+    conteo = conteo + 1;
+    if y(k)<=0
+        break
+    end
+end
+
+
+
+grid on 
+
+
+for k = 1:conteo-1
+    hold on
+
+    plot(x(k), y(k), '*');
+end
+
+xlabel("Posicion x (n)");
+ylabel("Posicion y (n)");
+title("Modelacion de la posición");
+disp("Velocidad final " + vfy(conteo-1));
